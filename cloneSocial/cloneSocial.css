@@ -1,0 +1,14 @@
+body {
+    background-color: #B4CEB3;
+}
+
+.container {
+    background-color: #88A0A8;
+    width: 300px;
+    height: auto;
+    word-wrap: break-word;
+    border: 3px solid #546a76;
+    padding: 24px;
+    margin: 16px;
+    line-height: auto;
+}

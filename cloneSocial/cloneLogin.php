@@ -31,12 +31,12 @@ if (isset($_POST['submit'])) {
 
     //Använder användarnamnet för att kunna få tillgång till rätt lösenord
     $sql = "SELECT * FROM `Users` WHERE username = '$nameLogin'";
-    $sqlUser = mysqli_query($conn, $sql);
-    $sqlItems = mysqli_fetch_assoc($sqlUser);
+    $sql = mysqli_query($conn, $sql);
+    $sql = mysqli_fetch_assoc($sql);
 
 
     //Kollar om lösenordet som är inskrivet är samma som databasens
-    if (password_verify($passwordLogin, $sqlItems["password"])) {
+    if (password_verify($passwordLogin, $sql["password"])) {
        
         session_start();
         $_SESSION["LoggedIn"] = True;

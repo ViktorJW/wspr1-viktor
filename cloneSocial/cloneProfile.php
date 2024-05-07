@@ -24,29 +24,29 @@ session_start();
 
 <body>
     <?php
-        $ID = $_GET["ID"];
+        $ID = intval($_GET["ID"]);
 
         $dbInfo = "SELECT * FROM `users` WHERE ID = '$ID'";
-        $dbResult = mysqli_query($conn, $dbInfo);
-        $dbItems = mysqli_fetch_array($dbResult);
+        $dbInfo = mysqli_query($conn, $dbInfo);
+        $dbInfo = mysqli_fetch_array($dbInfo);
  
-        $user = $dbItems['username'];
+        $user = $dbInfo['username'];
 
-        $sql = "SELECT * FROM `posts` WHERE ID = '$ID'";
-        $result = mysqli_query($conn, $sql);
-        $post = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $sql = "SELECT * FROM `posts` WHERE ID = '$ID' ORDER BY `date` DESC";
+        $sql = mysqli_query($conn, $sql);
+        $sql = mysqli_fetch_all($sql, MYSQLI_ASSOC);
     ?>
 
             
     <h2>Posts From <?php echo $user ?></h2>
 
     <!-- om ingen post har gjorts -->
-    <?php if (empty($post)): ?>
+    <?php if (empty($sql)): ?>
         <p>There is no posts :(</p>
     <?php endif; ?>
 
      <!-- om posts har gjorts -->
-    <?php foreach ($post as $item): ?>
+    <?php foreach ($sql as $item): ?>
         <?php echo $item['post']; ?>
         <div> By <?php echo $item['username']; ?> on <?php echo date_format(date_create($item['date']),'g:ia \o\n l jS F Y'); ?></div>
         </div>

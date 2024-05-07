@@ -27,6 +27,7 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rabbit - Hop Into Anything</title>
+    <link rel="stylesheet" href="cloneSocial.css">
 </head>
 
 <body>
@@ -37,30 +38,19 @@ session_start();
     //special saker
     if (isset($_SESSION["LoggedIn"])) {
         echo $_SESSION["User"];
-        $Sign = "Sign Out";
-    } 
+    } else {header("Location: cloneLogin.php");};
 
-    echo "    <a href='http://localhost:8080/cloneSocial/cloneLogin.php'>$Sign</a>";
+    echo "    <a href='./cloneLogin.php?logout'>Sign Out</a>";
     ?>
 
     <form action="<?php $_SERVER["PHP_SELF"]; ?>" method="GET">
-        <div>
-            <label for="get">Search For users: </label>
-            <input type="text" name="get">
-        </div>
-        <div>
-            <input type="submit" value="wtf" name="submitted">
-        </div>
-    <form>
+      <input type="text" placeholder="Search for users" name="search">
+      <button type="submit">Submit</button>
+    </form>
 
     <form action="<?php $_SERVER["PHP_SELF"]; ?>" method="POST">
-        <div>
-            <label for="post">Create Post: </label>
-            <input type="text" name="post">
-        </div>
-        <div>
-            <input type="submit" value="Post" name="submit">
-        </div>
+        <input type="text" name="post" placeholder="Create Post">
+        <input type="submit" value="Post" name="submit">
     <form>
 
     <?php
@@ -70,18 +60,13 @@ session_start();
             $ID = $_SESSION["ID"];
             $name = $_SESSION['User'];
             $sqlSend = "INSERT INTO `posts` (post, ID, username) VALUES ('$Post', '$ID', '$name')";
-            $result1 = mysqli_query($conn, $sqlSend);
+            $result = mysqli_query($conn, $sqlSend);
         }
-
-        if (isset($_Get['submitted'])) {
-            header("location: cloneProfile.php?ID='get'");
-        }
-
 
         //skaffa alla posts
-        $sql = 'SELECT * FROM `posts`';
-        $result = mysqli_query($conn, $sql);
-        $post = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $sql = 'SELECT * FROM `posts` ORDER BY `date` DESC';
+        $sql = mysqli_query($conn, $sql);
+        $sql = mysqli_fetch_all($sql, MYSQLI_ASSOC);
 
     ?>
 
@@ -89,16 +74,17 @@ session_start();
     <h2>Posts</h2>
 
     <!-- om ingen post har gjorts -->
-    <?php if (empty($post)): ?>
+    <?php if (empty($sql)): ?>
         <p>There is no posts :(</p>
     <?php endif; ?>
 
      <!-- om posts har gjorts -->
-    <?php foreach ($post as $item): ?>
-        <?php echo $item['post']; ?>
-        <div> By <?php echo $item['username']; ?> on <?php echo date_format(date_create($item['date']),'g:ia \o\n l jS F Y'); ?></div>
+    <?php foreach ($sql as $item): ?>
+        <div class="container">
+            <?php echo $item['post']; ?>
+            <br></br>
+            <div> By <?php echo $item['username']; ?> on <?php echo date_format(date_create($item['date']),'g:ia \o\n l jS F Y'); ?></div>
         </div>
-    </div>
     <?php endforeach; ?>
 
 </body>
