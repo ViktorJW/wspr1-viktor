@@ -19,38 +19,37 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rabbit - Profile Page</title>
+    <link rel="stylesheet" href="cloneSocial.css">
 </head>
 
 
 <body>
     <?php
-        $ID = intval($_GET["ID"]);
+        $username = strval($_GET["username"]);
 
-        $dbInfo = "SELECT * FROM `users` WHERE ID = '$ID'";
+        $dbInfo = "SELECT * FROM `users` WHERE username = '$username'";
         $dbInfo = mysqli_query($conn, $dbInfo);
         $dbInfo = mysqli_fetch_array($dbInfo);
- 
-        $user = $dbInfo['username'];
 
-        $sql = "SELECT * FROM `posts` WHERE ID = '$ID' ORDER BY `date` DESC";
+        $sql = "SELECT * FROM `posts` WHERE username = '$username' ORDER BY `date` DESC";
         $sql = mysqli_query($conn, $sql);
         $sql = mysqli_fetch_all($sql, MYSQLI_ASSOC);
     ?>
 
             
-    <h2>Posts From <?php echo $user ?></h2>
+    <h2>Posts From <?php echo $username;?></h2>
 
     <!-- om ingen post har gjorts -->
     <?php if (empty($sql)): ?>
-        <p>There is no posts :(</p>
+        <p>There is no posts from this user :(</p>
     <?php endif; ?>
 
      <!-- om posts har gjorts -->
     <?php foreach ($sql as $item): ?>
-        <?php echo $item['post']; ?>
-        <div> By <?php echo $item['username']; ?> on <?php echo date_format(date_create($item['date']),'g:ia \o\n l jS F Y'); ?></div>
+        <div class="container">
+            <?php echo $item['post']; ?>
+            <div> By <?php echo $item['username']; ?> on <?php echo date_format(date_create($item['date']),'g:ia \o\n l jS F Y'); ?></div>
         </div>
-    </div>
     <?php endforeach; ?>
 
 </body>

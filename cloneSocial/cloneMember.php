@@ -35,25 +35,30 @@ session_start();
 
     $Sign = "Sign In";
 
-    //special saker
+    //skickar dig tillbaka till login om du inte har loggat in
     if (isset($_SESSION["LoggedIn"])) {
         echo $_SESSION["User"];
     } else {header("Location: cloneLogin.php");};
 
-    echo "    <a href='./cloneLogin.php?logout'>Sign Out</a>";
+    echo "    <a href='./cloneLogin.php?logout=true'>Sign Out</a>";
     ?>
 
     <form action="<?php $_SERVER["PHP_SELF"]; ?>" method="GET">
       <input type="text" placeholder="Search for users" name="search">
-      <button type="submit">Submit</button>
+      <button type="submit">Search</button>
     </form>
 
     <form action="<?php $_SERVER["PHP_SELF"]; ?>" method="POST">
-        <input type="text" name="post" placeholder="Create Post">
+        <input type="text" name="post" placeholder="Create Post" required>
         <input type="submit" value="Post" name="submit">
     <form>
 
     <?php
+        if (isset($_GET['search'])) {
+            $search = filter_input(INPUT_GET, 'search', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            header("Location: cloneProfile.php?username=$search");
+        }
+
         //skicka in det du posta :)
         if (isset($_POST['submit'])) {
             $Post = filter_input(INPUT_POST, 'post', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
