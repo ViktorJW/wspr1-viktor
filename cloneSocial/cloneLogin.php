@@ -10,7 +10,11 @@ if ($conn->connect_error) {
     die('Connection failed: ' . $conn->connect_error);
 } 
 
+session_start();
+
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,6 +24,7 @@ if ($conn->connect_error) {
 </head>
 
 <?php
+
 
 $nameLogin = $passwordLogin = "";
 $wrongDetails = "Wrong Username or Password";
@@ -37,13 +42,12 @@ if (isset($_POST['submit'])) {
 
     //Kollar om lösenordet som är inskrivet är samma som databasens
     if (password_verify($passwordLogin, $sql["password"])) {
-       
-        session_start();
         $_SESSION["LoggedIn"] = True;
         $_SESSION["User"] = $nameLogin;
-        $_SESSION["ID"] = $sqlItems["ID"];
+        $_SESSION["ID"] = $sql["ID"];
 
         header("location: cloneMember.php");
+        exit();
         
     } else {
         echo $wrongDetails;

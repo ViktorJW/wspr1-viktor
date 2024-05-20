@@ -7,8 +7,7 @@ define('DB_NAME', 'social_clone');
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
 /* TO DO LIST:
-Gör så att man kan söka på andra personer - under progress - Gjort så att man ser vad personen har postat
-Gör så att man kan se vem som har postat (kanske "lika" och "kommentera") - halft klar - paused
+Gör så att man kan se vem som har postat (kanske "lika" och "kommentera") - halft klar - man kan se vem som har postat
 Följar system
 Om man refreshar sidan kommer den fråga om man vill skicka in formuläret igen vilket kommer leda till att man har 2 av samma post
 */
@@ -30,18 +29,18 @@ session_start();
     <link rel="stylesheet" href="cloneSocial.css">
 </head>
 
-<body>
+<br>
     <?php 
-
-    $Sign = "Sign In";
 
     //skickar dig tillbaka till login om du inte har loggat in
     if (isset($_SESSION["LoggedIn"])) {
         echo $_SESSION["User"];
     } else {header("Location: cloneLogin.php");};
 
-    echo "    <a href='./cloneLogin.php?logout=true'>Sign Out</a>";
     ?>
+    <a href='./cloneLogin.php'>Sign Out</a>
+
+    <br></br>
 
     <form action="<?php $_SERVER["PHP_SELF"]; ?>" method="GET">
       <input type="text" placeholder="Search for users" name="search">
@@ -49,7 +48,7 @@ session_start();
     </form>
 
     <form action="<?php $_SERVER["PHP_SELF"]; ?>" method="POST">
-        <input type="text" name="post" placeholder="Create Post" required>
+        <input type="text" name="Post" placeholder="Create Post" required>
         <input type="submit" value="Post" name="submit">
     <form>
 
@@ -61,15 +60,16 @@ session_start();
 
         //skicka in det du posta :)
         if (isset($_POST['submit'])) {
-            $Post = filter_input(INPUT_POST, 'post', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $Post = filter_input(INPUT_POST, 'Post', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $ID = $_SESSION["ID"];
-            $name = $_SESSION['User'];
-            $sqlSend = "INSERT INTO `posts` (post, ID, username) VALUES ('$Post', '$ID', '$name')";
+            $sqlSend = "INSERT INTO `posts` (post, ID) VALUES ('$Post', '$ID')";
             $result = mysqli_query($conn, $sqlSend);
+
+    
         }
 
         //skaffa alla posts
-        $sql = 'SELECT * FROM `posts` ORDER BY `date` DESC';
+        $sql = 'SELECT * FROM posts, users WHERE users.ID = posts.ID ORDER BY `date` DESC';
         $sql = mysqli_query($conn, $sql);
         $sql = mysqli_fetch_all($sql, MYSQLI_ASSOC);
 

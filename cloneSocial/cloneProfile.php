@@ -31,7 +31,7 @@ session_start();
         $dbInfo = mysqli_query($conn, $dbInfo);
         $dbInfo = mysqli_fetch_array($dbInfo);
 
-        $sql = "SELECT * FROM `posts` WHERE username = '$username' ORDER BY `date` DESC";
+        $sql = "SELECT * FROM posts, users WHERE users.ID = posts.ID AND users.username = '$username' ORDER BY `date` DESC";
         $sql = mysqli_query($conn, $sql);
         $sql = mysqli_fetch_all($sql, MYSQLI_ASSOC);
     ?>
